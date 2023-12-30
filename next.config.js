@@ -4,6 +4,8 @@ const nextConfig = {
     domains: [
       "https://picsum.photos",
       "https://cdn.discordapp.com/",
+      "https://images.pexels.com",
+
     ],
   },
 };

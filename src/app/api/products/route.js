@@ -14,6 +14,7 @@ export async function GET(req) {
       }
       : {}
   );
+  console.log(products);
 return Response.json(products);
 }
 
