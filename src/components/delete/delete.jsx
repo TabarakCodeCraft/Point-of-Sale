@@ -3,11 +3,15 @@ import { Button, Popconfirm } from "antd";
 import { DeleteOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 
 
-function Delete({ id }) {
+function Delete({ id ,  onDelete}) {
   const handleDelete = () => {
     fetch(`http://localhost:3000/api/products/${id}`, {
       method: "DELETE",
-    })
+      headers:{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({id})
+  })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to delete product with ID ${id}`);
@@ -18,6 +22,9 @@ function Delete({ id }) {
         console.log(data);
         console.log(`Product with ID ${id} deleted successfully`);
         alert("Product deleted successfully");
+
+        onDelete();
+
       })
       .catch((error) => {
         console.error(`Error deleting product with ID ${id}:`, error);
@@ -31,18 +38,14 @@ function Delete({ id }) {
         onConfirm={handleDelete}
         okText="نعم"
         cancelText="لا"
+        okButtonProps={{ style: { backgroundColor: 'red', color: 'white' } }}
       >
-        <Button
-          onClick={() => showModal(record.id)}
-          style={{ backgroundColor: 'white', color: 'black' }}
-        >
-          <QuestionCircleOutlined style={{ color: 'orange' }} />
-        </Button>
+       
   
         <Button
           type="dashed"
           danger
-          style={{ backgroundColor: "#2A3333", color: "white" }}
+          style={{  color: "red" }}
         >
           <DeleteOutlined />
         </Button>

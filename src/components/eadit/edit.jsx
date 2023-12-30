@@ -1,17 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Input } from "antd";
-const { TextArea } = Input;
 import { DollarOutlined, EditOutlined } from "@ant-design/icons";
 
-
 function Edit({ id, onEdit, productDetails }) {
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const [price, setPrice] = useState("");
 
   const showEditing = () => {
@@ -20,7 +16,7 @@ function Edit({ id, onEdit, productDetails }) {
 
   const handleOK = () => {
     setIsModalOpen(false);
-    onEdit();
+    onEdit(id);
   };
 
   const handleCancel = () => {
@@ -30,13 +26,15 @@ function Edit({ id, onEdit, productDetails }) {
   const updateProduct = () => {
     setIsLoading(true);
 
-    fetch(`http://localhost:3000/api/products/${id}`, {
+    fetch(`http://localhost:3000/api/products`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        title,
-        description,
+        id,
+        name,
+        image,
         price,
+        categoryId: 1
       }),
     })
       .then((res) => res.json())
@@ -50,13 +48,15 @@ function Edit({ id, onEdit, productDetails }) {
         setIsLoading(false);
       });
   };
+
   useEffect(() => {
     if (productDetails) {
-      setTitle(productDetails.title || "");
-      setDescription(productDetails.description || "");
+      setName(productDetails.name || "");
+      setImage(productDetails.image || "");
       setPrice(productDetails.price || "");
     }
   }, [productDetails]);
+
   return (
     <div>
       <Button
@@ -68,7 +68,7 @@ function Edit({ id, onEdit, productDetails }) {
       </Button>
       <Modal
         title="Edit Product"
-        open={isModalOpen}
+        visible={isModalOpen}
         onOk={updateProduct}
         onCancel={handleCancel}
         confirmLoading={isLoading}
@@ -76,18 +76,17 @@ function Edit({ id, onEdit, productDetails }) {
         <p>
           Product Name
           <Input
-            placeholder="ورق عنب وسط"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Edit Product"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </p>
         <p>
-          Description
-          <TextArea
-            rows={3}
-            placeholder="معمول بصوص دبس الرمان والنكهات السورية بأيدي عراقية..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+          Image
+          <Input
+            placeholder="URL.."
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
           />
         </p>
         <p>

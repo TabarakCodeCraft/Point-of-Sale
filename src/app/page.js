@@ -1,12 +1,14 @@
 "use client";
+
 import Header from "@/components/Header/header";
 import { Image, Card, CardBody, CardFooter, Button } from "@nextui-org/react";
 import styles from "./page.module.css";
 import AppContainer from "@/components/Contaner/container";
 import { useEffect, useState } from "react";
-import { categories, products } from "@/fake";
 import { useRouter } from 'next/navigation'
 import Link from "next/link";
+import Category from "./category/page";
+import { List } from "antd";
 
 
  function Home() {
@@ -104,7 +106,7 @@ import Link from "next/link";
         <div className={styles.content}>
           <div className={styles.items}>
             <div className={styles.categories}>
-              {categories.map((el) => (
+              {cats.map((el) => (
                 <Card isPressable onPress={() => getProducts(el.id)}>
                   <CardBody>
                     <p>{el.name}</p>
@@ -113,7 +115,7 @@ import Link from "next/link";
               ))}
             </div>
             <div className="gap-6 grid grid-cols-2 sm:grid-cols-4">
-              {products.map((item, index) => (
+              {list.map((item, index) => (
                 <Card
                   shadow="sm"
                   key={index}

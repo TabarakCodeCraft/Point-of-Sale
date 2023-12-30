@@ -14,12 +14,12 @@ export async function GET(req) {
       }
       : {}
   );
-
-  return Response.json(products);
+return Response.json(products);
 }
 
 export async function POST(req) {
   const body = await req.json();
+  
   try {
     let product = await prisma.product.create({
       data: body,
@@ -41,9 +41,10 @@ export async function PUT(req) {
   const body = await req.json();
 
   try {
+
     const updatedProduct = await prisma.product.update({
       where: {
-        id: parseInt(id),
+        id: body.id,
       },
       data: body,
     });
@@ -60,24 +61,34 @@ export async function PUT(req) {
   }
 };
 
-export async function DELETE(req) {
-  const { id } = req.params;
 
+export async function DELETE(req) {
+  const body = await req.json();
   try {
+    console.log(body.id);
+
     const deletedProduct = await prisma.product.delete({
       where: {
-        id: parseInt(id),
+        id: body.id,
       },
     });
 
-    return Response.json({
-      success: true,
-      product: deletedProduct,
-    });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        success: true,
+        product: deletedProduct,
+      }),
+    };
   } catch (error) {
-    return Response.json({
-      success: false,
-      error,
-    });
+    console.error('Error deleting product:', error);
+    return {
+      statusCode: error.code === 'P2025' ? 404 : 500, // Assuming P2025 is Prisma's error code for "not found"
+      body: JSON.stringify({
+        success: false,
+        error: error.message || "Internal Server Error",
+      }),
+    };
   }
 }
+
