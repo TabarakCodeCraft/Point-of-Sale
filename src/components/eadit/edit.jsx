@@ -21,7 +21,7 @@ function Edit({ id, onEdit, productDetails }) {
   const updateProduct = () => {
     setIsLoading(true);
   
-    fetch(`http://tabarak-point-of-sale.vercel.app//api/products/${id}`, {
+    fetch(`https://tabarak-point-of-sale.vercel.app/api/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -22,7 +22,7 @@ function Category() {
 
   const getCategories = async () => {
     try {
-      let res = await fetch(`http://tabarak-point-of-sale.vercel.app/api/categories`);
+      let res = await fetch(`https://tabarak-point-of-sale.vercel.app/api/categories`);
       let jsonData = await res.json();
       setCats(jsonData);
       setList(jsonData);
@@ -37,7 +37,7 @@ function Category() {
 
   const handleAddModalOk = () => {
     try {
-      let url = `http:/tabarak-point-of-sale.vercel.app/api/categories`;
+      let url = `https://tabarak-point-of-sale.vercel.app/api/categories`;
 
       fetch(url, {
         method: 'POST',
@@ -78,7 +78,7 @@ function Category() {
   const handleEditSuccess = async () => {
     try {
       const values = await editForm.validateFields();
-      await fetch(`http://tabarak-point-of-sale.vercel.app/api/categories/${selectedCatsId}`, {
+      await fetch(`https://tabarak-point-of-sale.vercel.app/api/categories/${selectedCatsId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ function Category() {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://tabarak-point-of-sale.vercel.app/api/categories/${id}`, {
+    fetch(`https://tabarak-point-of-sale.vercel.app/api/categories/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

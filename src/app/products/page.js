@@ -17,8 +17,8 @@ function Product() {
   const [isAddModalVisible, setAddModalVisible] = useState(false);
 
   const getProducts = async (cats, searchTerm) => {
-    let url = 'http://tabarak-point-of-sale.vercel.app//api/products';
-    if (cats) url = `http://tabarak-point-of-sale.vercel.app/api/products?cat=${cats}`;
+    let url = 'https://tabarak-point-of-sale.vercel.app/api/products';
+    if (cats) url = `https://tabarak-point-of-sale.vercel.app/api/products?cat=${cats}`;
 
     try {
       let res = await fetch(url);
@@ -41,7 +41,7 @@ function Product() {
 
   const handleAddModalOk = () => {
     try {
-      let url = `http://tabarak-point-of-sale.vercel.app/api/products`;
+      let url = `https://tabarak-point-of-sale.vercel.app/api/products`;
 
       fetch(url, {
         method: 'POST',
@@ -82,7 +82,7 @@ function Product() {
   }
 
   const handleDelete = (id) => {
-    fetch(`http://tabarak-point-of-sale.vercel.app/api/products/${id}`, {
+    fetch(`https://tabarak-point-of-sale.vercel.app/api/products/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -63,7 +63,7 @@ const InvoicesPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const url = `http://tabarak-point-of-sale.vercel.app/api/invoice`;
+        const url = `https://tabarak-point-of-sale.vercel.app/api/invoice`;
         const res = await fetch(url);
 
         if (!res.ok) {
