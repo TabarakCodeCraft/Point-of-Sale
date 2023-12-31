@@ -5,7 +5,7 @@ import { DeleteOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 
 function Delete({ id ,  onDelete}) {
   const handleDelete = () => {
-    fetch(`http://localhost:3000/api/products/${id}`, {
+    fetch(`http://tabarak-point-of-sale.vercel.app//api/products/${id}`, {
       method: "DELETE",
       headers:{
         "Content-Type": "application/json",

@@ -18,8 +18,8 @@ import { List } from "antd";
   const [cats, setCats] = useState([]);
 
   const getProducts = async (cat) => {
-    let url = "http://localhost:3000/api/products";
-    if (cat) url = `http://localhost:3000/api/products?cat=${cat}`;
+    let url = "http://tabarak-point-of-sale.vercel.app//api/products";
+    if (cat) url = `http://tabarak-point-of-sale.vercel.app//api/products?cat=${cat}`;
 
     try {
       let res = await fetch(url);
@@ -30,7 +30,7 @@ import { List } from "antd";
 
   const getCategories = async () => {
     try {
-      let res = await fetch("http://localhost:3000/api/categories");
+      let res = await fetch("http://tabarak-point-of-sale.vercel.app//api/categories");
       let jsonData = await res.json();
       setCats(jsonData);
     } catch (error) {}
@@ -83,7 +83,7 @@ import { List } from "antd";
     });
 
     try {
-      let res = await fetch("http://localhost:3000/api/invoice", {
+      let res = await fetch("http://tabarak-point-of-sale.vercel.app//api/invoice", {
         headers: {
           "Content-Type": "application/json",
         },
