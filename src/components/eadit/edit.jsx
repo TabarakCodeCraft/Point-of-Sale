@@ -14,19 +14,14 @@ function Edit({ id, onEdit, productDetails }) {
     setIsModalOpen(true);
   };
 
-  const handleOK = () => {
-    setIsModalOpen(false);
-    onEdit(id);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   const updateProduct = () => {
     setIsLoading(true);
-
-    fetch(`http://localhost:3000/api/products`, {
+  
+    fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -34,20 +29,25 @@ function Edit({ id, onEdit, productDetails }) {
         name,
         image,
         price,
-        categoryId: 1
+        categoryId: 1,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error editing product: ${res.statusText}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log(data);
         setIsLoading(false);
-        handleOK();
       })
       .catch((error) => {
         console.error("Error editing product:", error);
         setIsLoading(false);
       });
   };
+  
 
   useEffect(() => {
     if (productDetails) {
@@ -68,7 +68,7 @@ function Edit({ id, onEdit, productDetails }) {
       </Button>
       <Modal
         title="Edit Product"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={updateProduct}
         onCancel={handleCancel}
         confirmLoading={isLoading}

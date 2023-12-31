@@ -9,17 +9,11 @@ import AppContainer from '@/components/Contaner/container';
 import styles from "./page.module.css";
 
 
-
 function Product() {
-
   const [selectedProductId, setSelectedProductId] = useState(null);
-  const [newProductData, setNewProductData] = useState({
-    name: '',
-    image: '',
-    price: '',
-  });
+  const [newProductData, setNewProductData] = useState({});
   const [list, setList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalVisible, setAddModalVisible] = useState(false);
 
   const getProducts = async (cats, searchTerm) => {
@@ -40,30 +34,45 @@ function Product() {
       console.error('Error fetching products:', error.message);
     }
   };
-  const handleAdd = () => { setAddModalVisible(true); };
 
-  const handleAddModalOk = async () => {
+  const handleAdd = () => {
+    setAddModalVisible(true);
+  };
+
+  const handleAddModalOk = () => {
     try {
-      const response = await fetch('http://localhost:3000/api/products', {
+      let url = `http://localhost:3000/api/products`;
+
+      fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newProductData),
       });
-
-      if (response.ok) {
-        const newProduct = await response.json();
-        setList((prevList) => [...prevList, newProduct]);
-        setAddModalVisible(false);
-        setNewProductData({ name: '', image: '', price: '' });
-      } else {
-
-        console.error('Failed to add product:', response.statusText);
-      }
     } catch (error) {
       console.error('Error adding product:', error.message);
     }
+    setAddModalVisible(false);
+    console.log(newProductData)
+  };
+
+
+  const handleAddInputChange = (e, id) => {
+    const { name, value } = e.target;
+    let parsedValue = value;
+
+    if (name === "categoryId" && /^\d+$/.test(value)) {
+      parsedValue = parseInt(value, 10);
+    } else if (name === "price") {
+      parsedValue = parseFloat(value);
+    }
+
+    setNewProductData((prevData) => ({
+      ...prevData,
+      [name]: parsedValue,
+      id: id,
+    }));
   };
 
 
@@ -90,7 +99,6 @@ function Product() {
         console.log(data);
         console.log(`Product with ID ${id} deleted successfully`);
         alert("Product deleted successfully");
-
         getProducts();
       })
       .catch((error) => {
@@ -98,6 +106,7 @@ function Product() {
         alert(`Error deleting product with ID ${id}: ${error.message}`);
       });
   };
+
   const handleEdit = async (id) => {
     setSelectedProductId(id);
   };
@@ -106,27 +115,16 @@ function Product() {
     getProducts();
   }, []);
 
-  const handleOK = () => {
-    setIsModalOpen(false);
-    setSelectedProductId(id);
-  };
-
-
-  const handleCancel = () => {
-    setSelectedProductId(null);
-  };
   const handleEditSuccess = () => {
     alert("Product edited successfully");
     getProducts();
   };
 
-  const handleSearch = (value) => {
-    getProducts(null, value);
-    setSearchTerm(value);
-  };
+
   const filteredList = list.filter(product =>
     product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   const columns = [
     {
       title: 'ID',
@@ -137,7 +135,9 @@ function Product() {
       title: 'Image',
       key: 'image',
       render: (_, record) => (
-        <Image src={record.image} alt={'Image'} width={70} height={70} style={{ borderRadius: "50%" }} />
+        record.image ? (
+          <Image src={record.image} alt={'Image'} width={70} height={70} style={{ borderRadius: '50%' }} />
+        ) : null
       ),
     },
     {
@@ -149,29 +149,28 @@ function Product() {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (price) => `${price}$`,
+      render: (price) => price !== undefined ? `${price}$` : '',
     },
     {
       title: 'Edit',
       key: 'edit',
       render: (_, record) => (
         <Edit
-          id={record.id}
+          setSelectedProductId={record.id}
           onEdit={handleEdit}
           productDetails={record}
           onSuccess={handleEditSuccess}
         />
       ),
     },
-
     {
       title: 'Delete',
       key: 'delete',
       render: (_, record) => (
         <Delete id={record.id} onDelete={() => handleDelete(record.id)} />
+
       ),
     },
-
   ];
 
   return (
@@ -185,13 +184,12 @@ function Product() {
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             color: 'red',
             backgroundColor: 'white',
-
           }}>
           + Add Product
         </Button>
         <Modal
           title="Add Product"
-          visible={isAddModalVisible}
+          open={isAddModalVisible}
           onOk={handleAddModalOk}
           onCancel={handleAddModalCancel}
           okButtonProps={{
@@ -200,36 +198,34 @@ function Product() {
               color: 'white',
             },
           }}
-
         >
           <Input
+            name='id'
+            placeholder="id"
+            onChange={handleAddInputChange}
+          />
+          <Input
+            name='name'
             placeholder="Product Name"
-            value={newProductData.name}
-            onChange={(e) => setNewProductData({ ...newProductData, name: e.target.value })}
+            onChange={handleAddInputChange}
           />
           <Input
+            name='image'
             placeholder="Image URL"
-            value={newProductData.image}
-            onChange={(e) => setNewProductData({ ...newProductData, image: e.target.value })}
+            onChange={handleAddInputChange}
           />
           <Input
+            name='price'
             placeholder="Price"
-            value={newProductData.price}
-            onChange={(e) => setNewProductData({ ...newProductData, price: e.target.value })}
+            onChange={handleAddInputChange}
+          />
+          <Input
+            name='categoryId'
+            placeholder="catID"
+            onChange={handleAddInputChange}
           />
         </Modal>
-      </AppContainer>
-      <AppContainer>
-        <Input
-          placeholder="Search Products"
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-          style={{
-            borderRadius: '8px',
-            padding: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          }}
-        />
+
       </AppContainer>
       <div className={styles.table_container}>
         <AppContainer>
